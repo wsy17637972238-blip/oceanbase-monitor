@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>OceanBase 智能巡检系统 Demo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: "Microsoft YaHei", sans-serif; background: #f0f2f5; padding: 24px; color: #333; }
+        h1 { font-size: 20px; margin-bottom: 4px; }
+        .subtitle { color: #888; font-size: 13px; margin-bottom: 20px; }
+        .card { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+        .card h2 { font-size: 16px; margin-bottom: 12px; border-left: 4px solid #1677ff; padding-left: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { border: 1px solid #e8e8e8; padding: 8px 10px; text-align: left; }
+        th { background: #fafafa; }
+        tr:nth-child(even) { background: #fcfcfc; }
+        .tag { display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 12px; }
+        .tag-perf { background: #e6f4ff; color: #1677ff; }
+        .tag-avail { background: #f6ffed; color: #52c41a; }
+        .error { color: #cf1322; padding: 12px; }
+    </style>
+</head>
+<body>
+<h1>OceanBase 智能巡检系统</h1>
+<div class="subtitle">数据源：OceanBase CE（test 租户 / obinspection_check 库）</div>
+
+<div class="card">
+    <h2>巡检规则配置</h2>
+    <div id="rules">加载中...</div>
+</div>
+
+<div class="card">
+    <h2>系统配置</h2>
+    <div id="configs">加载中...</div>
+</div>
+
+<script>
+function renderTable(el, columns, rows) {
+    if (!rows.length) { el.innerHTML = '<p>暂无数据</p>'; return; }
+    let html = '<table><tr>' + columns.map(c => '<th>' + c.label + '</th>').join('') + '</tr>';
+    for (const row of rows) {
+        html += '<tr>' + columns.map(c => {
+            let v = row[c.key];
+            if (v === null || v === undefined) v = '-';
+            if (c.key === 'category') {
+                const cls = v === 'PERFORMANCE' ? 'tag-perf' : 'tag-avail';
+                v = '<span class="tag ' + cls + '">' + v + '</span>';
+            }
+            return '<td>' + v + '</td>';
+        }).join('') + '</tr>';
+    }
+    el.innerHTML = html + '</table>';
+}
+
+fetch('/api/rules')
+    .then(r => r.json())
+    .then(data => renderTable(document.getElementById('rules'), [
+        { key: 'rule_id', label: '规则标识' },
+        { key: 'rule_name', label: '名称' },
+        { key: 'category', label: '分类' },
+        { key: 'warn_threshold', label: 'WARN阈值' },
+        { key: 'critical_threshold', label: 'CRITICAL阈值' },
+        { key: 'enabled', label: '启用' },
+        { key: 'description', label: '说明' }
+    ], data))
+    .catch(e => document.getElementById('rules').innerHTML = '<p class="error">加载失败：' + e + '</p>');
+
+fetch('/api/configs')
+    .then(r => r.json())
+    .then(data => renderTable(document.getElementById('configs'), [
+        { key: 'config_key', label: '配置键' },
+        { key: 'config_value', label: '配置值' },
+        { key: 'description', label: '说明' }
+    ], data))
+    .catch(e => document.getElementById('configs').innerHTML = '<p class="error">加载失败：' + e + '</p>');
+</script>
+</body>
+</html>
