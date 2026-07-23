@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: ob-inspection
+  datasource:
+    ob:
+      jdbc-url: jdbc:oceanbase://127.0.0.1:2881/oceanbase
+      username: root@sys
+      password:   # 本地 oceanbase-ce Docker 镜像默认 root@sys 空密码
+      driver-class-name: com.oceanbase.jdbc.Driver
+    h2:
+      jdbc-url: jdbc:h2:file:./data/obinspection;DB_CLOSE_DELAY=-1;MODE=MySQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+deepseek:
+  api:
+    key: ${DEEPSEEK_API_KEY:sk-your-key-here}
+    url: https://api.deepseek.com/chat/completions
+    model: deepseek-chat
