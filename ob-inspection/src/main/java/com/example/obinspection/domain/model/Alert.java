@@ -7,6 +7,12 @@ import java.time.LocalDateTime;
  */
 public class Alert {
 
+    /** 待确认 */
+    public static final String STATUS_PENDING = "PENDING";
+
+    /** 已确认 */
+    public static final String STATUS_ACKED = "ACKED";
+
     private Long alertId;
     private Long taskId;
     private Long resultId;

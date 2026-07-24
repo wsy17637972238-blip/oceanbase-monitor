@@ -6,7 +6,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * RestTemplate 配置（connect 10s / read 30s）。
+ * RestTemplate 配置（connect 5s / read 60s，AI 调用为秒级长响应）。
  */
 @Configuration
 public class RestTemplateConfig {
@@ -14,8 +14,8 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(10_000);
-        factory.setReadTimeout(30_000);
+        factory.setConnectTimeout(5_000);
+        factory.setReadTimeout(60_000);
         return new RestTemplate(factory);
     }
 }

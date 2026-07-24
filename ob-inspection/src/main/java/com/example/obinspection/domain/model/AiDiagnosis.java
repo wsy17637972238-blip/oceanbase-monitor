@@ -7,6 +7,15 @@ import java.time.LocalDateTime;
  */
 public class AiDiagnosis {
 
+    /** 诊断进行中 */
+    public static final String CALL_STATUS_RUNNING = "RUNNING";
+
+    /** 诊断成功 */
+    public static final String CALL_STATUS_SUCCESS = "SUCCESS";
+
+    /** 诊断失败（原因见 errorMsg） */
+    public static final String CALL_STATUS_FAILED = "FAILED";
+
     private Long diagnosisId;
     private Long alertId;
     private Long taskId;

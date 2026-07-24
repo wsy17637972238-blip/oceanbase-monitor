@@ -77,6 +77,18 @@ CREATE TABLE IF NOT EXISTS alert_notification (
     error_msg TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+-- 被巡检实例纳管表：采集器按 enabled=1 的实例循环采集，指标 tag 带 instance 标识。
+-- 注意：password 当前明文存储（仅限本地演示），生产环境必须加密存储，并使用只读最小权限账号。
+CREATE TABLE IF NOT EXISTS inspection_instance (
+    instance_id BIGINT PRIMARY KEY,
+    instance_name VARCHAR(100) NOT NULL,
+    jdbc_url VARCHAR(500) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(500),
+    enabled TINYINT DEFAULT 1,
+    description VARCHAR(500),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE IF NOT EXISTS system_config (
     config_key VARCHAR(100) PRIMARY KEY,
     config_value TEXT NOT NULL,

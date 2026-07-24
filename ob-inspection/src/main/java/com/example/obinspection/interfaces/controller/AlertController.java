@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,8 +38,9 @@ public class AlertController {
 
     @Operation(summary = "告警列表")
     @GetMapping
-    public Result<List<Alert>> listAlerts() {
-        return Result.success(alertAppService.listAlerts());
+    public Result<List<Alert>> listAlerts(@RequestParam(required = false) String status,
+                                          @RequestParam(required = false) String level) {
+        return Result.success(alertAppService.listAlerts(status, level));
     }
 
     @Operation(summary = "确认告警")

@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +16,9 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 多数据源配置：H2 为主数据源（系统自身数据），OceanBase 数据源懒加载，
- * 保证在 OceanBase 未启动的环境下应用依然可以启动。
+ * 数据源配置：H2 为主数据源（系统自身数据，含被巡检实例纳管表 inspection_instance）。
+ * OceanBase 被巡检实例的连接不再由本类静态配置，改为按实例动态建池，
+ * 见 {@link com.example.obinspection.infrastructure.collector.ObInstanceConnectionManager}。
  */
 @Configuration
 public class DataSourceConfig {
@@ -32,19 +32,6 @@ public class DataSourceConfig {
 
     @Bean
     public JdbcTemplate h2JdbcTemplate(@Qualifier("h2DataSource") DataSource ds) {
-        return new JdbcTemplate(ds);
-    }
-
-    @Bean
-    @Lazy // OB 未启动时不连接
-    @ConfigurationProperties("spring.datasource.ob")
-    public DataSource obDataSource() {
-        return DataSourceBuilder.create().type(HikariDataSource.class).build();
-    }
-
-    @Bean
-    @Lazy
-    public JdbcTemplate obJdbcTemplate(@Qualifier("obDataSource") DataSource ds) {
         return new JdbcTemplate(ds);
     }
 

@@ -2,6 +2,7 @@ package com.example.obinspection.interfaces.controller;
 
 import com.example.obinspection.application.dto.response.DashboardSummaryDTO;
 import com.example.obinspection.application.dto.response.Result;
+import com.example.obinspection.application.service.DashboardAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dashboard")
 public class DashboardController {
 
+    private final DashboardAppService dashboardAppService;
+
+    public DashboardController(DashboardAppService dashboardAppService) {
+        this.dashboardAppService = dashboardAppService;
+    }
+
     @Operation(summary = "看板汇总数据")
     @GetMapping("/summary")
     public Result<DashboardSummaryDTO> summary() {
-        // TODO: 聚合任务/告警统计信息
-        return Result.success(null);
+        return Result.success(dashboardAppService.summary());
     }
 }

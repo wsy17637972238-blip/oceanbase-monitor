@@ -12,6 +12,11 @@ public interface InspectionTaskRepository {
 
     void save(InspectionTask task);
 
+    /**
+     * 更新任务状态字段（overall_status / end_time / duration_ms / error_msg）。
+     */
+    void update(InspectionTask task);
+
     Optional<InspectionTask> findById(Long taskId);
 
     List<InspectionTask> findAll();

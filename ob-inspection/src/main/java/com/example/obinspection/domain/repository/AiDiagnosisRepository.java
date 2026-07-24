@@ -12,7 +12,17 @@ public interface AiDiagnosisRepository {
 
     void save(AiDiagnosis diagnosis);
 
+    /**
+     * 更新诊断记录（RUNNING → SUCCESS/FAILED 状态流转）。
+     */
+    void update(AiDiagnosis diagnosis);
+
     Optional<AiDiagnosis> findById(Long diagnosisId);
 
     List<AiDiagnosis> findAll();
+
+    /**
+     * 查询指定告警最新一次诊断（幂等判定 / 查询接口用）。
+     */
+    Optional<AiDiagnosis> findLatestByAlertId(Long alertId);
 }
